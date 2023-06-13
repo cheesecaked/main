@@ -1,0 +1,217 @@
+body {
+  width: 100vw;
+  height: 550vh;
+
+  padding: 0;
+  margin: 0;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}
+#root {
+  width: 100%;
+  height: 100%;
+}
+.headerContainer {
+  flex-direction: column;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  background-image: url("../assets/brooke-cagle-cb4Dv50LN1Y-unsplash\ 1.jpg");
+  background-size: 100% 100%;
+  font-weight: bold;
+  overflow: hidden;
+}
+.top-of-header {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: 35%;
+  height: 10vh;
+  width: 100%;
+}
+.leftOfHeader {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15%;
+  gap: 200px;
+  height: 100%;
+  width: 50%;
+}
+.rightOfHeader {
+  height: 100%;
+  width: 50%;
+  font-weight: bold;
+}
+.iconLogo {
+  margin-left: 11.5%;
+}
+.servicesAndContacts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  height: 10vh;
+  width: 100%;
+  color: white;
+}
+.descAndAccess {
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: fit-content;
+  width: 75%;
+  gap: 100px;
+  color: white;
+  font-size: 30px;
+}
+.iconLogo img {
+  margin-bottom: 3%;
+  margin-left: 25%;
+}
+.getAccess {
+  background-color: transparent;
+  border: 2px solid rgba(157, 157, 157, 0.537);
+  border-radius: 5px;
+  color: rgba(157, 157, 157, 0.537);
+  font-size: 20px;
+  padding: 2%;
+  padding-left: 2.3%;
+  padding-right: 2.3%;
+}
+.servicesAndContacts a {
+  color: white;
+  text-decoration: underline rgba(255, 255, 255, 0.333);
+  text-underline-offset: 2.5px;
+}
+h1 {
+  margin: 0;
+}
+.inputAndButton {
+  display: flex;
+  gap: 10px;
+}
+.emailInput {
+  width: 316px;
+  height: 51px;
+  padding-left: 5%;
+  border-radius: 2px;
+  border: hidden;
+  font-size: 16px;
+  font-weight: bold;
+  outline: none;
+}
+.earlyAccessButton {
+  padding-left: 1%;
+  padding-right: 1%;
+  width: 163px;
+  height: 51px;
+  background-color: #0bbef2;
+  color: white;
+  border: hidden;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.description h3 {
+  font-size: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+.middle {
+  margin: 0;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+.right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 50%;
+}
+.left {
+  width: 50%;
+}
+.middle h1 {
+  font-size: 60px;
+}
+.middle h3 {
+  font-size: 30px;
+  margin-top: 10%;
+  margin-bottom: 0;
+  font-weight: 400;
+}
+.middle p {
+  margin: 0;
+}
+.h3s {
+  font-weight: 400;
+  margin-top: 4%;
+}
+.left-1 {
+  padding: 0%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 70%;
+
+  background-image: url("../assets/ooto\ Meetings\ 1.png");
+  background-size: 100% 100%;
+}
+.middle-1 {
+  margin-top: 5%;
+}
+.icon-icon {
+  display: flex;
+  justify-content: flex-end;
+}
+.icon-1 {
+  margin-right: 25%;
+  height: 75px;
+  width: 75px;
+}
+.event-1 {
+  position: absolute;
+  margin-top: 2%;
+  right: 38%;
+  width: 20%;
+  height: 20%;
+}
+.group-1 {
+  margin-left: 2%;
+}
+.middle-2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.right-2 {
+  
+
+  width: 40%;
+  height: 80%;
+  background-image: url("../assets/Mask\ group.png");
+  background-size: 100% 100%;
+}
+.left-2 {
+  display: flex;
+  justify-content: center;
+  width: 60%;
+}
+.right-3 {
+  border: 3px solid;
+}
+.left-3 {
+  border: 3px solid;
+}
+.background {
+  background-image: url("../assets/Mask\ group\ 2.png");
+}

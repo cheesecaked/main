@@ -1,0 +1,129 @@
+// import React, {useState} from "react";
+// import { UserCard } from "./user";
+// import users from "../users.json"
+// export const Home = () => {
+//   console.log(users);
+//   const [output, setOutput] = useState(users);
+//   const search = (val) => {
+//     setOutput(() => {
+//       return users.filter((users) => {
+//         return users.username.toLowerCase().includes(val.toLowerCase());
+//       });
+//     });
+//   };
+//   return (
+//     <div className="userContainer">
+//       <input
+//         type={"text"}
+//         onChange={(e) => {
+//           search(e.target.value);
+//         }}
+//       />
+//       {output.length == 0 && <div>No User Found</div>}
+//       {output.map((userData, index) => (
+//         <UserCard userData={userData} key={index} />
+//       ))}
+//     </div>
+//   );
+// };
+// import React from 'react'
+// import "../test.css"
+// import users from "../users.json"
+// import { useParams, Link } from 'react-router-dom'
+// import { useEffect } from 'react'
+// export const SeeDetail = () => {
+//     const { username } = useParams();
+
+//     useEffect(() => {
+//         users.map((el) => {
+//             console.log(username, el.username);
+//             if (el.username === username) {
+//                 console.log(el);
+//             }
+//         })
+//     }, [])
+//   return (
+//     <div className="card">
+//         SeeDetail: {username}
+//       <div className="User">
+//         <p className="Description">
+//           <h3>⭐ ⭐ ⭐ ⭐ ⭐ </h3>
+//           <h2 className="desc">
+//             Give everyone you work with inside and outside your emoji, keep
+//             conversations focused in channels, and simplify all your
+//             communications in one place
+//           </h2>
+//           <p>
+//             <img src={users.avatar} alt={""}/> 
+//             <Link to={users.first_name}>
+//             <h2>{users.username}</h2>
+//             </Link>
+            
+//           </p>
+//         </p>
+//       </div>
+//     </div>
+//   )
+// }
+// import { React } from "react";
+// import "./App.css";
+// import { useState } from "react";
+// export const List = () => {
+//   return <div>bruh</div>;
+// };
+// export const Comment = (props) => {
+//   const { commentText } = props;
+//   return <div className="comment">{commentText}</div>;
+// };
+
+// export const Example = () => {
+//   const [list, setList] = useState([]);
+//   const [inputValue, setInputValue] = useState("");
+
+//   const deleteHandler = (itemIndex) => {
+//     const newList = list.filter((item, index) => {
+//       return index !== itemIndex;
+//     });
+//     setList(newList);
+//   };
+
+//   return (
+//     <div className="App">
+//       <div className="bruh2"><input className="taskInput"
+//         type={"text"}
+//         value={inputValue}
+//         onChange={(e) => {
+//           setInputValue(e.target.value);
+//         }}
+//       />
+//       <button className="addButton"
+//         onClick={() => {
+//           if (inputValue === "") {
+//             alert("input is gay");
+//           } else setList([...list, inputValue]);
+//         }}
+//       >
+//         Add 
+//       </button></div>
+//       <div className="bruh">
+//         {list.map((toDo, index) => {
+//           return (
+//             <div key={index} className="bruh3">
+//               {toDo} <button onClick={() => {
+//                 deleteHandler(index)
+//               }}>X</button>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     </div>
+//   );
+// };
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => setOffset(window.pageYOffset)
+    window.addEventListener("scroll", onScroll)
+
+    return () => window.removeEventListener("scroll",onScroll)
+  }, [])
