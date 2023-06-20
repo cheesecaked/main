@@ -52,25 +52,32 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    gap: "30px",
     borderWidth: 1,
   },
   image: {
-    width: "50px",
-    height: "50px",
+    width: "5%",
+    height: "5%",
   },
   input1: {
     borderWidth: 1,
     height: "32px",
+
   },
   pogchamp: {
+    height: "33%",
+    width: "100%",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
   },
   todo: {
+    width: "100%",
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
   },
-  list: {},
+  list: {
+    borderWidth: 1,
+    height: "33%",
+    width: "21.5%"
+  },
 });
