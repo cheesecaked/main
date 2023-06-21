@@ -1,50 +1,63 @@
 import { StyleSheet, View, Text, Image } from "react-native";
-import { Entypo } from '@expo/vector-icons'; 
+import { useState } from "react";
+import { Entypo } from "@expo/vector-icons";
+import { Drop } from "./Dropdown";
 
-export const Card = () => {
+export const Card = (props) => {
+  const [isClicked, setIsClicked] = useState(false);
+
+  const toggleDropDown = () => {
+    setIsClicked(!isClicked);
+  };
   return (
     <View style={styles.card}>
       <View style={styles.profile}>
-      <View style={{
-            width: "50%",
-            flexDirection: "row"
-        }}>
-        <Image
+        <View
           style={{
-            width: 60,
-            height: 60,
-            borderRadius: 20,
-            backgroundColor: "#E0E0E0",
-            marginRight: 20,
+            width: "50%",
+            flexDirection: "row",
           }}
-          source={require("../assets/PogChamp.png")}
-        />
-        <View style={{
-            width: "70%",
-            justifyContent: "center",
-            gap: 10
-        }}>
-          <Text
+        >
+          <Image
             style={{
-              fontSize: 15,
-              fontWeight: "400",
+              width: 60,
+              height: 60,
+              borderRadius: 20,
+              backgroundColor: "#E0E0E0",
+              marginRight: 20,
+            }}
+            source={require("../assets/PogChamp.png")}
+          />
+          <View
+            style={{
+              width: "70%",
+              justifyContent: "center",
+              gap: 10,
             }}
           >
-            John Smith
-          </Text>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: "400",
-              color: "grey"
-            }}
-          >
-            6 minutes ago
-          </Text>
-          
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "400",
+              }}
+            >
+              John Smith
+            </Text>
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "400",
+                color: "grey",
+              }}
+            >
+              6 minutes ago
+            </Text>
           </View>
         </View>
-        <Entypo name="dots-three-vertical" size={24} color="grey" />
+        <View style={styles.dropdown}>
+          { isClicked && <Drop delete={props.delete} toggleDropDown={toggleDropDown}/>}
+          <Entypo onPress={toggleDropDown} name="dots-three-vertical" size={24} color="grey" />
+        </View>
       </View>
       <Text
         style={{
@@ -53,16 +66,17 @@ export const Card = () => {
           paddingTop: 10,
         }}
       >
-        Good Morning!
+        {props.text}
       </Text>
     </View>
   );
 };
 const styles = StyleSheet.create({
-  card: {     
+  card: {
     backgroundColor: "#fff",
     marginBottom: 10,
     justifyContent: "space-between",
+    height: 160,
     padding: 20,
   },
   profile: {
@@ -71,5 +85,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-
+  dropdown: {
+    flexDirection: "row",
+    height: "100%",
+    marginTop: "5%"
+  }
 });
