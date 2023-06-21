@@ -21,7 +21,7 @@ export default function App() {
       <View style={styles.pogchamp}>
         <Image
           style={styles.image}
-          source={require("./assets/download.jpeg")}
+          source={require("./assets/PogChamp.png")}
         />
         <Text>TO DO LISTT</Text>
       </View>
