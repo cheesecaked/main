@@ -1,0 +1,13 @@
+GET http://localhost:3001/posts
+
+###
+
+POST http://localhost:3001/posts/create
+
+###
+
+DELETE http://localhost:3001/posts/delete/64952a364f88bc40b5e43bdb
+
+###
+
+PUT http://localhost:3001/posts/update/64952a364f88bc40b5e43bdb
