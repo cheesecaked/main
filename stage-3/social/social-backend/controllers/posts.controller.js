@@ -17,7 +17,7 @@ exports.createPosts = async (req, res) => {
 };
 exports.deletePosts = async (req, res) => {
     try {
-        const result = await Post.findByIdAndRemove({
+        const result = await Post.findByIdAndDelete({
             _id: req.params.id
         })
         res.status(200).json(result)

@@ -9,6 +9,7 @@ export const Card = (props) => {
   const toggleDropDown = () => {
     setIsClicked(!isClicked);
   };
+
   return (
     <View style={styles.card}>
       <View style={styles.profile}>
@@ -56,7 +57,7 @@ export const Card = (props) => {
           </View>
         </View>
         <View style={styles.dropdown}>
-          { isClicked && <Drop delete={props.delete} toggleDropDown={toggleDropDown}/>}
+          { isClicked && <Drop index={props.index} toggleDropDown={toggleDropDown}/>}
           <TouchableOpacity onPress={toggleDropDown} >
           <Entypo name="dots-three-vertical" size={24} color="grey" />
           </TouchableOpacity>
