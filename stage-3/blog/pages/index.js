@@ -12,6 +12,7 @@ import IconButton from "@mui/joy/IconButton";
 import Link from "@mui/joy/Link";
 import Favorite from "@mui/icons-material/Favorite";
 import { Avatar } from "@mui/joy";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
