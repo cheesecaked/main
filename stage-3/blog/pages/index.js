@@ -40,28 +40,6 @@ export default function Home() {
           console.log(articles.cover_image);
           return (
             <CardComponent key={index} article={article} />
-            // <div
-            //   onClick={() => {
-            //     window.location.pathname = article.slug;
-            //   }}
-            //   key={index}
-            //   className={styles.post_container}
-            // >
-            //   {
-            //     article?.cover_image && (
-            //       <Image
-            //       src={article.cover_image}
-            //       width={500}
-            //       height={500}
-            //       alt="Picture of the author"
-            //     />
-            //     )
-            //   }
-
-            //   <h1 style={{
-            //     margin: "0"
-            //   }}>{article.title}</h1>
-            // </div>
           );
         })}
     </div>
