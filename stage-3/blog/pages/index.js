@@ -13,14 +13,16 @@ import Link from "@mui/joy/Link";
 import Favorite from "@mui/icons-material/Favorite";
 import { Avatar } from "@mui/joy";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const [articles, setArticles] = useState();
 
+
   useEffect(() => {
-    fetch(`https://dev.to/api/articles?username=nataliedeweerd`)
+    fetch(`https://dev.to/api/articles`)
       .then((res) => res.json())
       .then((data) => setArticles(data));
   }, []);
@@ -48,6 +50,8 @@ export default function Home() {
 }
 
 const CardComponent = ({ article }) => {
+  const router = useRouter()
+
   console.log(article);
   return (
     <Card variant="outlined" sx={{ width: 520 }}>
@@ -74,7 +78,7 @@ const CardComponent = ({ article }) => {
       </CardOverflow>
       <CardContent>
         <Typography level="h2" fontSize="md">
-          <Link href={article.slug} overlay underline="none">
+          <Link href={router.push(article.path)} overlay underline="none">
             {article.title}
           </Link>
         </Typography>
