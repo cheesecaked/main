@@ -22,7 +22,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    fetch(`https://dev.to/api/articles?username=nataliedeweerd`)
+    fetch(`https://dev.to/api/articles`)
       .then((res) => res.json())
       .then((data) => setArticles(data));
   }, []);

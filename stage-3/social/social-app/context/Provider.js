@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export const DataContext=createContext();
 
-export const DataProvider = (props) => {
+const DataProvider = (props) => {
     const [posts,setPosts]=useState([]);
     const [deleteId, setDeleteId] = useState()
     useEffect(() => {
@@ -31,3 +31,4 @@ export const DataProvider = (props) => {
         </DataContext.Provider>
     )
 }
+export default DataProvider
