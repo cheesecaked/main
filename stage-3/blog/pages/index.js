@@ -22,37 +22,34 @@ export default function Home() {
 
 
   useEffect(() => {
-    fetch(`https://dev.to/api/articles`)
+    fetch(`https://dev.to/api/articles?username=nataliedeweerd`)
       .then((res) => res.json())
       .then((data) => setArticles(data));
   }, []);
 
   return (
     <>
-    <Head>
+      <Head>
         <meta property="og:title" content="test title" />
         <meta property="og:description" content="test description" />
         <meta property="og:image" content="https://img.freepik.com/free-photo/space-background-realistic-starry-night-cosmos-shining-stars-milky-way-stardust-color-galaxy_1258-154643.jpg" />
-        <meta property="og:image:width" content="1200"/>
-        <meta property="og:image:height" content="630"/>
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
       </Head>
-    <div className={styles.card_container}>
-      {articles &&
-        articles.map((article, index) => {
-          console.log(articles.cover_image);
-          return (
-            <CardComponent key={index} article={article} />
-          );
-        })}
-    </div>
+      <div className={styles.card_container}>
+        {articles &&
+          articles.map((article, index) => {
+            console.log(articles.cover_image);
+            return (
+              <CardComponent key={index} article={article} />
+            );
+          })}
+      </div>
     </>
   );
 }
 
-const CardComponent = ({ article }) => {
-  const router = useRouter()
-
-  console.log(article);
+const CardComponent = ({ article }) => { 
   return (
     <Card variant="outlined" sx={{ width: 520 }}>
       <CardOverflow>
@@ -78,12 +75,12 @@ const CardComponent = ({ article }) => {
       </CardOverflow>
       <CardContent>
         <Typography level="h2" fontSize="md">
-          <Link href={router.push(article.path)} overlay underline="none">
+          <Link href={article.path} overlay underline="none">
             {article.title}
           </Link>
         </Typography>
         <Typography display={"flex"} alignItems={"center"} flexDirection={"row"} gap={1} level="body2" sx={{ mt: 0.5 }}>
-          <Avatar width={50}height={50} src={article.user.profile_image}/>
+          <Avatar width={50} height={50} src={article.user.profile_image} />
           {article.user.username}
         </Typography>
       </CardContent>
