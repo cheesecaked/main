@@ -39,13 +39,13 @@ export default function Home() {
       <hr></hr>
       {comment &&
         comment.map(({ id_code, user, body_html, children }) => {
-          return(
-          <Comment
-            key={id_code}
-            user={user}
-            body_html={body_html}
-            children={children}
-          />)
+          return (
+            <Comment
+              key={id_code}
+              user={user}
+              body_html={body_html}
+              children={children}
+            />)
         })}
     </>
   );

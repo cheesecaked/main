@@ -49,7 +49,7 @@ export default function Home() {
   );
 }
 
-const CardComponent = ({ article }) => { 
+const CardComponent = ({ article }) => {
   return (
     <Card variant="outlined" sx={{ width: 520 }}>
       <CardOverflow>
