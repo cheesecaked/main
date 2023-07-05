@@ -7,7 +7,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 export default function Main() {
   return (
-
     <PaperProvider>
       <App />
     </PaperProvider>

@@ -7,36 +7,82 @@ import { useState, useEffect, useContext } from 'react';
 import { DataContext } from './context/provider';
 import DataProvider from './context/provider';
 import RenderHTML from 'react-native-render-html';
-import { ScrollView, Settings, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Button, SafeAreaView, ScrollView, Settings, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { Chip } from 'react-native-paper';
-import { Card } from './components/card';
+import { Post } from './components/card';
 import { Comments } from './components/comments';
 import React from "react";
 import {
   ClerkProvider,
   SignedIn,
   SignedOut,
-  UserButton,
+  useAuth,
   useUser,
-  RedirectToSignIn,
-} from "@clerk/clerk-react";
-
+} from "@clerk/clerk-expo";
+import SignUpScreen from "./components/signup-screen";
+import SignInScreen from "./components/signin-screen";
+import * as SecureStore from "expo-secure-store";
+import { SignedOutScreen } from "./components/signedout-screen";
+const tokenCache = {
+  async getToken(key) {
+    try {
+      return SecureStore.getItemAsync(key);
+    } catch (err) {
+      return null;
+    }
+  },
+  async saveToken(key, value) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (err) {
+      return;
+    }
+  },
+};
+const SignOut = () => {
+  const { isLoaded, signOut } = useAuth();
+  if (!isLoaded) {
+    return null;
+  }
+  return (
+    <View style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100%"
+    }}>
+      <Button
+        title="Sign Out"
+        onPress={() => {
+          signOut();
+        }}
+      />
+    </View>
+  );
+};
 export default function App() {
+
   return (
 
-    <NavigationContainer>
-      <ClerkProvider publishableKey="pk_test_c3F1YXJlLWhhd2stMjEuY2xlcmsuYWNjb3VudHMuZGV2JA">
-        <SignedIn>
+    <ClerkProvider
+      tokenCache={tokenCache}
+      publishableKey="pk_test_c3F1YXJlLWhhd2stMjEuY2xlcmsuYWNjb3VudHMuZGV2JA">
+         
+      <SignedOut>
         <DataProvider>
-          <DrawerNavigator />
+        <SignedOutScreen />
         </DataProvider>
-        </SignedIn>
-        <SignedOut>
-          <Text>signed out</Text>
-        </SignedOut>
-      </ClerkProvider>
-    </NavigationContainer>
+      </SignedOut>
+      <SignedIn>
+      <NavigationContainer>
+          <DataProvider>
+            <DrawerNavigator />
+          </DataProvider>
+          </NavigationContainer>
+      </SignedIn>
+     
 
+    </ClerkProvider>
   );
 }
 const Tabs = createBottomTabNavigator()
@@ -53,6 +99,7 @@ function DrawerNavigator() {
   return <Drawer.Navigator screenOptions={{ headerShown: false }}>
     <Drawer.Screen name="Stack" component={StackNavigator} />
     <Drawer.Screen name="Settings" component={SettingsScreen} />
+    <Drawer.Screen name="SignOut" component={SignOut} />
   </Drawer.Navigator>
 }
 const Stack = createNativeStackNavigator()
@@ -76,9 +123,15 @@ function SettingsScreen() {
 }
 
 function ProfileScreen() {
-  return <View>
-    <Text>Profile screen</Text>
-  </View>
+  const { isLoaded, isSignedIn, user } = useUser();
+
+  if (!isLoaded || !isSignedIn) {
+    return null;
+  }
+  return <Text>
+    {JSON.stringify(user.emailAddresses.emailAddressss)}
+  </Text>
+
 }
 
 function HomeScreen({ navigation }) {
@@ -91,7 +144,7 @@ function HomeScreen({ navigation }) {
       <ScrollView style={{ flexDirection: 'column', gap: 10 }}>
         {
           articles.map((articles, index) => {
-            return <Card navigation={navigation} key={index} articles={articles} />
+            return <Post navigation={navigation} key={index} articles={articles} />
           })
         }
       </ScrollView>

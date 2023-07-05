@@ -7,6 +7,7 @@ export const DataContext = createContext();
 
 const DataProvider = (props) => {
     const [articles, setArticles] = useState([]);
+    const [ inOutSwitch,setInOutSwitch] = useState(false)
     useEffect(() => {
         fetch(`https://dev.to/api/articles`)
             .then((res) => res.json())
@@ -16,7 +17,9 @@ const DataProvider = (props) => {
     return (
         <DataContext.Provider value={{
             articles,
-            setArticles
+            setArticles,
+            inOutSwitch,
+            setInOutSwitch
         }}>
             {props.children}    
         </DataContext.Provider>
