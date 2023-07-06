@@ -7,7 +7,7 @@ import { useState, useEffect, useContext } from 'react';
 import { DataContext } from './context/provider';
 import DataProvider from './context/provider';
 import RenderHTML from 'react-native-render-html';
-import { Button, SafeAreaView, ScrollView, Settings, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Alert, Button, SafeAreaView, ScrollView, Settings, StyleSheet, Text, TextInput, TouchableOpacity, View, ViewComponent, useWindowDimensions } from 'react-native';
 import { Chip } from 'react-native-paper';
 import { Post } from './components/card';
 import { Comments } from './components/comments';
@@ -39,27 +39,7 @@ const tokenCache = {
     }
   },
 };
-const SignOut = () => {
-  const { isLoaded, signOut } = useAuth();
-  if (!isLoaded) {
-    return null;
-  }
-  return (
-    <View style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "100%"
-    }}>
-      <Button
-        title="Sign Out"
-        onPress={() => {
-          signOut();
-        }}
-      />
-    </View>
-  );
-};
+
 export default function App() {
 
   return (
@@ -67,20 +47,20 @@ export default function App() {
     <ClerkProvider
       tokenCache={tokenCache}
       publishableKey="pk_test_c3F1YXJlLWhhd2stMjEuY2xlcmsuYWNjb3VudHMuZGV2JA">
-         
+
       <SignedOut>
         <DataProvider>
-        <SignedOutScreen />
+          <SignedOutScreen />
         </DataProvider>
       </SignedOut>
       <SignedIn>
-      <NavigationContainer>
+        <NavigationContainer>
           <DataProvider>
             <DrawerNavigator />
           </DataProvider>
-          </NavigationContainer>
+        </NavigationContainer>
       </SignedIn>
-     
+
 
     </ClerkProvider>
   );
@@ -99,7 +79,6 @@ function DrawerNavigator() {
   return <Drawer.Navigator screenOptions={{ headerShown: false }}>
     <Drawer.Screen name="Stack" component={StackNavigator} />
     <Drawer.Screen name="Settings" component={SettingsScreen} />
-    <Drawer.Screen name="SignOut" component={SignOut} />
   </Drawer.Navigator>
 }
 const Stack = createNativeStackNavigator()
@@ -107,8 +86,8 @@ const Stack = createNativeStackNavigator()
 function StackNavigator() {
   return <Stack.Navigator>
     <Stack.Screen name='Tabs' component={TabNavigator} options={{ headerShown: false }} />
-
     <Stack.Screen name='Home' component={HomeScreen} />
+    <Stack.Screen name="Edit" component={EditNameScreen} />
     <Stack.Screen name='Details' component={DetailsScreen} />
     <Stack.Screen name='Comments' component={CommentsScreen} />
   </Stack.Navigator>
@@ -122,18 +101,122 @@ function SettingsScreen() {
   </View>
 }
 
-function ProfileScreen() {
-  const { isLoaded, isSignedIn, user } = useUser();
-
-  if (!isLoaded || !isSignedIn) {
+function ProfileScreen({ navigation }) {
+  const { isSignedIn, user, isLoaded } = useUser();
+  const SignOut = () => {
+    const { isLoaded, signOut } = useAuth();
+    if (!isLoaded) {
+      return null;
+    }
+    return (
+      <View style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%"
+      }}>
+        <Chip
+          title="Sign Out"
+          onPress={() => {
+            Alert.alert('sign out?', null, [
+              {
+                text: 'No',
+                style: 'cancel'
+              },
+              {
+                text: 'Yes', onPress: () => signOut()
+              }
+            ])
+          }}
+        />
+      </View>
+    );
+  };
+  if (!isLoaded) {
     return null;
   }
-  return <Text>
-    {JSON.stringify(user.emailAddresses.emailAddressss)}
-  </Text>
+
+  if (isSignedIn) {
+    console.log(JSON.stringify(user, null, 4))
+    return <View>
+      <Text>Hello {user.fullName}!</Text>
+      <View style={{
+        display: "flex",
+        flexDirection: 'row'
+      }}>
+        <Chip onPress={() => navigation.navigate('Edit')}>Edit</Chip>
+        <SignOut />
+      </View>
+    </View>;
+  }
+
+  return <Text>Not signed in</Text>;
 
 }
+function EditNameScreen() {
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [editName, setEditName] = useState(false)
+  const { user } = useUser();
+  if (!user) return null;
+  const updateUser = async () => {
+    await user.update({
+      firstName: firstName,
+      lastName: lastName,
+    });
+  };
+  return (
+    <View style={{
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
+      width: "50%",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: 10,
+      alignSelf: "center"
+    }}>
 
+
+      <View style={{
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "flex-start"
+      }}>
+        <Text>firstName: </Text>
+        {editName ? (<TextInput
+          style={styles.input}
+          value={firstName}
+          onChangeText={firstName => setFirstName(firstName)}
+        />) : <Text style={styles.name}>{user?.firstName}</Text>}
+      </View>
+
+
+      <View style={{
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "flex-start"
+      }}>
+        <Text>lastName: </Text>
+        {editName ? (<TextInput
+          style={styles.input}
+          value={lastName}
+          onChangeText={lastName => setLastName(lastName)}
+        />) : <Text style={styles.name}>{user?.lastName}</Text>}
+      </View>
+      <View style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 10
+      }}>
+        <Chip style={{
+          display: editName ? "flex" : "none"
+        }} onPress={() => { updateUser(), setEditName(!editName) }}>Confirm</Chip>
+        <Chip onPress={() => setEditName(!editName)}>Edit</Chip>
+      </View>
+    </View>
+  )
+}
 function HomeScreen({ navigation }) {
 
   const { articles, setArticles } = useContext(DataContext)
@@ -217,4 +300,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  input: {
+    height: 40,
+    width: "100%",
+    borderWidth: 1,
+    padding: 10
+  },
+  name: {
+    argin: 12,
+  }
 });
