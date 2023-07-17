@@ -113,6 +113,7 @@ function ProfileScreen({ navigation }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        flexDirection: "row",
         height: "100%"
       }}>
         <Chip
@@ -128,7 +129,7 @@ function ProfileScreen({ navigation }) {
               }
             ])
           }}
-        />
+        >Sign out</Chip>
       </View>
     );
   };
@@ -142,7 +143,8 @@ function ProfileScreen({ navigation }) {
       <Text>Hello {user.fullName}!</Text>
       <View style={{
         display: "flex",
-        flexDirection: 'row'
+        flexDirection: 'row',
+        gap: 10
       }}>
         <Chip onPress={() => navigation.navigate('Edit')}>Edit</Chip>
         <SignOut />
