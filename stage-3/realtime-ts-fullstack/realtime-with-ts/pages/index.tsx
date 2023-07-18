@@ -7,10 +7,10 @@ configureAbly({ key: '-TDDJA.wfHEYQ:TSL8k8-ht5w1IJW65t0L6Q5SC75-Ic1Mxa8K1Y5VGNo'
 
 export default function Home() {
   const [text, setText] = useState('')
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<any>([])
 
-  const [channel] = useChannel('public-chat', (message) => {
-    setMessages((prev) => [...prev, message])
+  const [channel] = useChannel('public-chat', (message: any) => {
+    setMessages((prev: any) => [...prev, message])
   })
 
   async function sendMessage() {
@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <main>
       {
-        messages.map((message) => (
+        messages.map((message: any) => (
           <div className='chat chat-start'>
             <div className='chat-bubble'>{message.data.text}</div>
           </div>
