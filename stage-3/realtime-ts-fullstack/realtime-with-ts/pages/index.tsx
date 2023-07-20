@@ -1,35 +1,21 @@
-import { configureAbly, useChannel } from '@ably-labs/react-hooks'
-import { useState } from 'react'
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/nextjs"
+import { NavigationContainer} from "react-navigation";
 
-
-configureAbly({ key: '-TDDJA.wfHEYQ:TSL8k8-ht5w1IJW65t0L6Q5SC75-Ic1Mxa8K1Y5VGNo', clientId: Date.now() + '' })
-
-
-export default function Home() {
-  const [text, setText] = useState('')
-  const [messages, setMessages] = useState<any>([])
-
-  const [channel] = useChannel('public-chat', (message: any) => {
-    setMessages((prev: any) => [...prev, message])
-  })
-
-  async function sendMessage() {
-    channel.publish('message', { text, date: Date.now() })
-    setText('')
-  }
+import { SignedOutScreen } from "./component/signedout-screen"
+import * as dotenv from "dotenv";
+import Chat from "./component/chat";
+import { Layout } from "./layout";
+dotenv.config
+const App = () => {
   return (
-    <main>
-      {
-        messages.map((message: any) => (
-          <div className='chat chat-start'>
-            <div className='chat-bubble'>{message.data.text}</div>
-          </div>
-        ))
-      }
-      <textarea className='textarea' value={text} onChange={(e) => setText(e.target.value)} />
-      <button type='button' className='btn' onClick={sendMessage}>
-        send
-      </button>
-    </main>
-  )
+  <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
+    <SignedIn>
+      <Layout/>
+    </SignedIn>
+    <SignedOut>
+      <SignedOutScreen/>
+    </SignedOut>
+  </ClerkProvider>)
 }
+
+export default App
