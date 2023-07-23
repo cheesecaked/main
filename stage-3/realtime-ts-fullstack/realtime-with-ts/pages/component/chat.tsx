@@ -21,10 +21,8 @@ export default function Chat() {
   }
   return (
     <main>
-      {messages.map((message: any) => (
-        <div className="chat chat-start">
-          <div className="chat-bubble">{message.data.text}</div>
-        </div>
+      {messages.map((message: any, index: any) => (
+        <Message key={index} message={message}/>
       ))}
       <textarea
         className="textarea"
@@ -36,4 +34,10 @@ export default function Chat() {
       </button>
     </main>
   );
+}
+
+const Message = ( props: any ) => {
+  return <div className="chat chat-start">
+  <div className="chat-bubble">{props.message.data.text}</div>
+</div>
 }
