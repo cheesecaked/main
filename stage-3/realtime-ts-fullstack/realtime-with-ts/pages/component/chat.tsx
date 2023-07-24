@@ -15,14 +15,26 @@ export default function Chat() {
     setMessages((prev: any) => [...prev, message]);
   });
 
+  const submitMessage = async () => {
+    const response = await fetch("http://localhost:4000/create", {
+      method: "POST",
+      body: JSON.stringify({ text }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+  };
   async function sendMessage() {
     channel.publish("message", { text, date: Date.now() });
     setText("");
+    submitMessage()
   }
   return (
     <main>
       {messages.map((message: any, index: any) => (
-        <Message key={index} message={message}/>
+        <Message key={index} message={message} />
       ))}
       <textarea
         className="textarea"
@@ -36,8 +48,10 @@ export default function Chat() {
   );
 }
 
-const Message = ( props: any ) => {
-  return <div className="chat chat-start">
-  <div className="chat-bubble">{props.message.data.text}</div>
-</div>
-}
+const Message = (props: any) => {
+  return (
+    <div className="chat chat-start">
+      <div className="chat-bubble">{props.message.data.text}</div>
+    </div>
+  );
+};
