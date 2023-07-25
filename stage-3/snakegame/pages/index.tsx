@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useInterval from "use-interval";
 
-const zoom = 10;
+const zoom = 11;
 const areaWidth = 30;
 const areaHeight = 30;
 
@@ -10,39 +10,47 @@ export default function Home() {
     { down: 3, right: 5 },
     { down: 3, right: 4 },
     { down: 3, right: 3 },
-    { down: 3, right: 2 },
-    { down: 3, right: 1 },
   ]);
-  const [direction, setDirection] = useState("down");
-
+  const [apple, setApple] = useState({
+    left: 5,
+    top: 5,
+  });
+  const [gameOver, setGameOver] = useState(false);
+  const [direction, setDirection] = useState("");
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
-      if (direction !== "up" && e.code === "ArrowDown") {
-        setDirection("down")
-      } else if (direction !== "down" && e.code === "ArrowUp") {
-        setDirection("up")
-      } else if (direction !== "right" && e.code === "ArrowLeft") {
-        setDirection("left")
-      } else if (direction !== "left" && e.code === "ArrowRight") {
-        setDirection("right")
-      }
-      // switch (e.code) {
-      //   case "ArrowDown":
-      //     setDirection("down");
-      //     break;
-      //   case "ArrowRight":
-      //     setDirection("right");
-      //     break;
-      //   case "ArrowUp":
-      //     setDirection("up");
-      //     break;
-      //   case "ArrowLeft":
-      //     setDirection("left");
-      //     break;
-      // }
+      setDirection((prevDirection) => {
+        switch (e.code) {
+          case "ArrowRight":
+            if (prevDirection !== "left") {
+              return "right";
+            }
+            break;
+          case "ArrowLeft":
+            if (prevDirection !== "right") {
+              return "left";
+            }
+            break;
+          case "ArrowUp":
+            if (prevDirection !== "down") {
+              return "up";
+            }
+            break;
+          case "ArrowDown":
+            if (prevDirection !== "up") {
+              return "down";
+            }
+            break;
+        }
+        return prevDirection;
+      });
     });
-  });
-
+  }, []);
+  function generateApple() {
+    const top = Math.floor(Math.random() * areaHeight);
+    const left = Math.floor(Math.random() * areaHeight);
+    setApple({ top, left });
+  }
   function goRight() {
     const newBody = [...body];
     newBody.pop();
@@ -69,7 +77,6 @@ export default function Home() {
 
     setBody(newBody);
   }
-
 
   function goDown() {
     const newBody = [...body];
@@ -106,10 +113,24 @@ export default function Home() {
         goUp();
         break;
       case "left":
-        goLeft()
+        goLeft();
         break;
     }
-  }, 250);
+
+    if (body[0].down === apple.top && body[0].right === apple.left) {
+      generateApple();
+      setBody([...body, { down: body[1].down, right: body[1].right }]);
+    }
+    for (let index = 1; index < body.length; index++) {
+      if (
+        body[0].down === body[index].down &&
+        body[0].right === body[index].right
+      ) {
+        setDirection("");
+        setGameOver(true);
+      }
+    }
+  }, 200);
   return (
     <main
       style={{
@@ -127,10 +148,34 @@ export default function Home() {
           backgroundColor: "slateblue",
           width: areaWidth * zoom,
           height: areaHeight * zoom,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
         }}
       >
-        {body.map((segment) => (
+        <div
+          style={{
+            top: apple.top * zoom,
+            left: apple.left * zoom,
+            backgroundColor: "red",
+            position: "absolute",
+            height: zoom,
+            width: zoom,
+          }}
+        ></div>
+        <div
+          style={{
+            display: gameOver ? "flex" : "none",
+            flexDirection: "column",
+            backgroundColor: "grey"
+          }}
+        >
+          <h3>Game Over!</h3>
+          <button onClick={() => window.location.reload()}>restart?</button>
+        </div>
+        {body.map((segment, index) => (
           <div
+            key={index}
             style={{
               position: "absolute",
               backgroundColor: "slategray",
