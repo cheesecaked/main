@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useInterval from "use-interval";
-
+import DropDown from "./component/dropdown";
 const zoom = 11;
 const areaWidth = 30;
 const areaHeight = 30;
@@ -17,7 +17,31 @@ export default function Home() {
   });
   const [gameOver, setGameOver] = useState(false);
   const [direction, setDirection] = useState("");
+  const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
+  const [showDropDown, setShowDropDown] = useState(false);
+  const [selectCity, setSelectCity] = useState("");
+
+  const cities = () => {
+    return ["Hard", "Medium", "Easy"];
+  };
+  const toggleDropDown = () => {
+    setShowDropDown(!showDropDown);
+  };
+  const dismissHandler = (event: React.FocusEvent<HTMLButtonElement>): void => {
+    if (event.currentTarget === event.target) {
+      setShowDropDown(false);
+    }
+  };
+  const citySelection = (city: string): void => {
+    setSelectCity(city);
+  };
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      console.log(window.innerWidth);
+    }
+    window.localStorage.setItem("high-score", JSON.stringify(highScore));
+
     window.addEventListener("keydown", (e) => {
       setDirection((prevDirection) => {
         switch (e.code) {
@@ -119,6 +143,8 @@ export default function Home() {
 
     if (body[0].down === apple.top && body[0].right === apple.left) {
       generateApple();
+      setScore(score + 1);
+
       setBody([...body, { down: body[1].down, right: body[1].right }]);
     }
     for (let index = 1; index < body.length; index++) {
@@ -128,9 +154,10 @@ export default function Home() {
       ) {
         setDirection("");
         setGameOver(true);
+        setHighScore(score);
       }
     }
-  }, 200);
+  }, selectCity === "Hard" ? 50 : selectCity=== "Medium" ?  150 : selectCity === "Easy" ? 250 : 250);
   return (
     <main
       style={{
@@ -150,7 +177,7 @@ export default function Home() {
           height: areaHeight * zoom,
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <div
@@ -167,7 +194,7 @@ export default function Home() {
           style={{
             display: gameOver ? "flex" : "none",
             flexDirection: "column",
-            backgroundColor: "grey"
+            backgroundColor: "grey",
           }}
         >
           <h3>Game Over!</h3>
@@ -187,6 +214,37 @@ export default function Home() {
           ></div>
         ))}
       </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <p>score: {score}</p>
+      </div>
+      <div className="announcement">
+        <div>
+          {selectCity ? `You selected ${selectCity}` : "Select your Difficulty"}
+        </div>
+      </div>
+      <button
+        className={showDropDown ? "active" : undefined}
+        onClick={(): void => toggleDropDown()}
+        onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
+          dismissHandler(e)
+        }
+      >
+        <div>{selectCity ? "Select: " + selectCity : "Select ..."} </div>
+        {showDropDown && (
+          <DropDown
+            cities={cities()}
+            showDropDown={false}
+            toggleDropDown={(): void => toggleDropDown()}
+            citySelection={citySelection}
+          />
+        )}
+      </button>
     </main>
   );
 }
+
