@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import useInterval from "use-interval";
 import DropDown from "./component/dropdown";
-const zoom = 11;
-const areaWidth = 30;
-const areaHeight = 30;
-
-export default function Home() {
+const zoom = 20;
+const areaWidth = 40;
+const areaHeight = 40;
+const Home = () => {
   const [body, setBody] = useState([
     { down: 3, right: 5 },
     { down: 3, right: 4 },
@@ -40,7 +39,6 @@ export default function Home() {
     if (typeof window !== "undefined") {
       console.log(window.innerWidth);
     }
-    window.localStorage.setItem("high-score", JSON.stringify(highScore));
 
     window.addEventListener("keydown", (e) => {
       setDirection((prevDirection) => {
@@ -125,54 +123,76 @@ export default function Home() {
     newBody.unshift({ ...newBody[0], down: newUp });
     setBody(newBody);
   }
-  useInterval(() => {
-    switch (direction) {
-      case "right":
-        goRight();
-        break;
-      case "down":
-        goDown();
-        break;
-      case "up":
-        goUp();
-        break;
-      case "left":
-        goLeft();
-        break;
-    }
-
-    if (body[0].down === apple.top && body[0].right === apple.left) {
-      generateApple();
-      setScore(score + 1);
-
-      setBody([...body, { down: body[1].down, right: body[1].right }]);
-    }
-    for (let index = 1; index < body.length; index++) {
-      if (
-        body[0].down === body[index].down &&
-        body[0].right === body[index].right
-      ) {
-        setDirection("");
-        setGameOver(true);
-        setHighScore(score);
+  useInterval(
+    () => {
+      switch (direction) {
+        case "right":
+          goRight();
+          break;
+        case "down":
+          goDown();
+          break;
+        case "up":
+          goUp();
+          break;
+        case "left":
+          goLeft();
+          break;
       }
-    }
-  }, selectCity === "Hard" ? 50 : selectCity=== "Medium" ?  150 : selectCity === "Easy" ? 250 : 250);
+
+      if (body[0].down === apple.top && body[0].right === apple.left) {
+        generateApple();
+        setScore(score + 1);
+
+        setBody([...body, { down: body[1].down, right: body[1].right }]);
+      }
+      for (let index = 1; index < body.length; index++) {
+        if (
+          body[0].down === body[index].down &&
+          body[0].right === body[index].right
+        ) {
+          setDirection("");
+          setGameOver(true);
+        }
+      }
+    },
+    selectCity === "Hard"
+      ? 50
+      : selectCity === "Medium"
+      ? 150
+      : selectCity === "Easy"
+      ? 250
+      : gameOver
+      ? 1000000
+      : 250
+  );
   return (
     <main
       style={{
         display: "flex",
-        minHeight: "screen",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: 24,
+        height: "100%",
+        fontFamily: "sans-serif",
+        width: "100%"
       }}
     >
+      <div style={{
+        display: gameOver ? "flex" : "none",
+        backgroundColor: "black",
+        position: "absolute",
+        opacity: gameOver ? "50%" : "0%",
+        width: "100%",
+        height: "100%",
+        zIndex: 4,
+        transitionDuration: "0.75s"
+      }}></div>
       <div
         style={{
           position: "relative",
-          backgroundColor: "slateblue",
+          backgroundColor: "smokescreen",
+          boxShadow: "0px 0px 1000px -100px",
           width: areaWidth * zoom,
           height: areaHeight * zoom,
           display: "flex",
@@ -192,12 +212,22 @@ export default function Home() {
         ></div>
         <div
           style={{
-            display: gameOver ? "flex" : "none",
+            position: "absolute",
+            display: "flex",
+            top: gameOver ? "50%" : "10%",
+            opacity: gameOver ? "100%" : "0%",
+            transition: "0.75s",
             flexDirection: "column",
-            backgroundColor: "grey",
+            backgroundColor: "white",
+            padding: 15,
+            gap: 5,
+            zIndex: 5,
+            borderRadius: "10px",
           }}
         >
-          <h3>Game Over!</h3>
+          <h3 style={{
+            fontFamily: "sans-serif"
+          }}>Game Over!</h3>
           <button onClick={() => window.location.reload()}>restart?</button>
         </div>
         {body.map((segment, index) => (
@@ -221,6 +251,7 @@ export default function Home() {
         }}
       >
         <p>score: {score}</p>
+        <p>highscore: {}</p>
       </div>
       <div className="announcement">
         <div>
@@ -228,6 +259,9 @@ export default function Home() {
         </div>
       </div>
       <button
+      style={{
+
+      }}
         className={showDropDown ? "active" : undefined}
         onClick={(): void => toggleDropDown()}
         onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
@@ -246,5 +280,6 @@ export default function Home() {
       </button>
     </main>
   );
-}
+};
 
+export default Home;
