@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useInterval from "use-interval";
 import DropDown from "./component/dropdown";
+import LevelDropDown from "./component/levelDropdown";
 const zoom = 20;
 const areaWidth = 40;
 const areaHeight = 40;
@@ -9,6 +10,16 @@ const Home = () => {
     { down: 3, right: 5 },
     { down: 3, right: 4 },
     { down: 3, right: 3 },
+  ]);
+  const [level1, setLevel1] = useState([
+    { down: 19, right: 19 },
+    { down: 18, right: 19 },
+    { down: 17, right: 19 },
+    { down: 16, right: 19 },
+    { down: 20, right: 19 },
+    { down: 21, right: 19 },
+    { down: 22, right: 19 },
+    { down: 23, right: 19 },
   ]);
   const [apple, setApple] = useState({
     left: 5,
@@ -19,13 +30,20 @@ const Home = () => {
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [showDropDown, setShowDropDown] = useState(false);
+  const [showLevel, setShowLevel] = useState(false);
   const [selectCity, setSelectCity] = useState("");
-
+  const [selectLevel, setSelectLevel] = useState("");
   const cities = () => {
     return ["Hard", "Medium", "Easy"];
   };
+  const levels = () => {
+    return ["level 1", "level 2"];
+  };
   const toggleDropDown = () => {
     setShowDropDown(!showDropDown);
+  };
+  const toggleLevel = () => {
+    setShowLevel(!showLevel);
   };
   const dismissHandler = (event: React.FocusEvent<HTMLButtonElement>): void => {
     if (event.currentTarget === event.target) {
@@ -34,6 +52,9 @@ const Home = () => {
   };
   const citySelection = (city: string): void => {
     setSelectCity(city);
+  };
+  const levelSelection = (levels: string): void => {
+    setSelectLevel(levels);
   };
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -155,6 +176,16 @@ const Home = () => {
           setGameOver(true);
         }
       }
+      if (selectLevel === "level 1") {
+        for (let index = 0; index < level1.length; index++) {
+          if (
+            body[0].down === level1[index].down &&
+            body[0].right === level1[index].right
+          ) {
+            setGameOver(true);
+          }
+        }
+      }
     },
     selectCity === "Hard"
       ? 50
@@ -162,9 +193,7 @@ const Home = () => {
       ? 150
       : selectCity === "Easy"
       ? 250
-      : gameOver
-      ? 1000000
-      : 250
+      : 150
   );
   return (
     <main
@@ -172,22 +201,47 @@ const Home = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "space-between",
         height: "100%",
         fontFamily: "sans-serif",
-        width: "100%"
+        width: "100%",
       }}
     >
-      <div style={{
-        display: gameOver ? "flex" : "none",
-        backgroundColor: "black",
-        position: "absolute",
-        opacity: gameOver ? "50%" : "0%",
-        width: "100%",
-        height: "100%",
-        zIndex: 4,
-        transitionDuration: "0.75s"
-      }}></div>
+      <div
+        style={{
+          display: gameOver ? "flex" : "none",
+          backgroundColor: "black",
+          position: "absolute",
+          opacity: gameOver ? "50%" : "0%",
+          width: "100%",
+          height: "100%",
+          zIndex: 4,
+          transitionDuration: "0.75s",
+        }}
+      ></div>
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          top: gameOver ? "40%" : "10%",
+          opacity: gameOver ? "100%" : "0%",
+          transition: "0.75s",
+          flexDirection: "column",
+          backgroundColor: "white",
+          padding: 15,
+          gap: 5,
+          zIndex: 5,
+          borderRadius: "10px",
+        }}
+      >
+        <h3
+          style={{
+            fontFamily: "sans-serif",
+          }}
+        >
+          Game Over!
+        </h3>
+        <button onClick={() => window.location.reload()}>restart?</button>
+      </div>
       <div
         style={{
           position: "relative",
@@ -195,9 +249,6 @@ const Home = () => {
           boxShadow: "0px 0px 1000px -100px",
           width: areaWidth * zoom,
           height: areaHeight * zoom,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
         }}
       >
         <div
@@ -210,32 +261,27 @@ const Home = () => {
             width: zoom,
           }}
         ></div>
-        <div
-          style={{
-            position: "absolute",
-            display: "flex",
-            top: gameOver ? "50%" : "10%",
-            opacity: gameOver ? "100%" : "0%",
-            transition: "0.75s",
-            flexDirection: "column",
-            backgroundColor: "white",
-            padding: 15,
-            gap: 5,
-            zIndex: 5,
-            borderRadius: "10px",
-          }}
-        >
-          <h3 style={{
-            fontFamily: "sans-serif"
-          }}>Game Over!</h3>
-          <button onClick={() => window.location.reload()}>restart?</button>
-        </div>
+
         {body.map((segment, index) => (
           <div
             key={index}
             style={{
               position: "absolute",
-              backgroundColor: "slategray",
+              backgroundColor: "green",
+              top: segment.down * zoom,
+              left: segment.right * zoom,
+              width: zoom,
+              height: zoom,
+            }}
+          ></div>
+        ))}
+        {level1.map((segment, index) => (
+          <div
+            key={index}
+            style={{
+              position: "absolute",
+              display: selectLevel === "level 1" ? "flex" : "none",
+              backgroundColor: "black",
               top: segment.down * zoom,
               left: segment.right * zoom,
               width: zoom,
@@ -244,40 +290,71 @@ const Home = () => {
           ></div>
         ))}
       </div>
+      <div></div>
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
+          gap: 10,
         }}
       >
         <p>score: {score}</p>
         <p>highscore: {}</p>
       </div>
-      <div className="announcement">
-        <div>
-          {selectCity ? `You selected ${selectCity}` : "Select your Difficulty"}
+      <div
+        style={{
+          display: "flex",
+          gap: 20,
+        }}
+      >
+        <div className="announcement">
+          <div>
+            {selectCity
+              ? `You selected ${selectCity}`
+              : "Select your Difficulty"}
+          </div>
+          <button
+            style={{}}
+            className={showDropDown ? "active" : undefined}
+            onClick={(): void => toggleDropDown()}
+            onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
+              dismissHandler(e)
+            }
+          >
+            <div>{selectCity ? "Select: " + selectCity : "Select ..."} </div>
+            {showDropDown && (
+              <DropDown
+                cities={cities()}
+                showDropDown={false}
+                toggleDropDown={(): void => toggleDropDown()}
+                citySelection={citySelection}
+              />
+            )}
+          </button>
+        </div>
+        <div className="announcement">
+          <div>
+            {selectCity ? `You selected ${selectCity}` : "Select a level"}
+          </div>
+          <button
+            style={{}}
+            className={showDropDown ? "active" : undefined}
+            onClick={toggleLevel}
+            onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
+              dismissHandler(e)
+            }
+          >
+            <div>{selectLevel ? "Select: " + selectLevel : "Select ..."} </div>
+            {showLevel && (
+              <LevelDropDown
+                levels={levels()}
+                showLevel={false}
+                toggleLevel={(): void => toggleLevel()}
+                levelSelection={levelSelection}
+              />
+            )}
+          </button>
         </div>
       </div>
-      <button
-      style={{
-
-      }}
-        className={showDropDown ? "active" : undefined}
-        onClick={(): void => toggleDropDown()}
-        onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
-          dismissHandler(e)
-        }
-      >
-        <div>{selectCity ? "Select: " + selectCity : "Select ..."} </div>
-        {showDropDown && (
-          <DropDown
-            cities={cities()}
-            showDropDown={false}
-            toggleDropDown={(): void => toggleDropDown()}
-            citySelection={citySelection}
-          />
-        )}
-      </button>
     </main>
   );
 };
