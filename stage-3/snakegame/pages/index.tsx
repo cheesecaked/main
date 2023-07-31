@@ -95,77 +95,75 @@ const Home = () => {
     setApple({ top, left });
   }
   function goRight() {
-    const newBody = [...body];
-    newBody.pop();
-
-    let newRight = newBody[0].right + 1;
-    if (newRight > areaWidth - 1) {
-      newRight = 0;
+    let newLeft = body[0].right + 1;
+    if (newLeft > areaWidth - 1) {
+      newLeft = 0;
     }
 
-    newBody.unshift({ ...newBody[0], right: newRight });
-
-    setBody(newBody);
+    return { ...body[0], right: newLeft };
   }
   function goLeft() {
-    const newBody = [...body];
-    newBody.pop();
-
-    let newleft = newBody[0].right - 1;
-    if (newleft < areaWidth - areaWidth) {
-      newleft = areaWidth - 1;
+    let newLeft = body[0].right - 1;
+    if (newLeft < 0) {
+      newLeft = areaWidth - 1;
     }
 
-    newBody.unshift({ ...newBody[0], right: newleft });
-
-    setBody(newBody);
+    return { ...body[0], right: newLeft };
   }
 
   function goDown() {
-    const newBody = [...body];
-    newBody.pop();
-    let newDown = newBody[0].down + 1;
-    if (newDown > areaHeight - 1) {
-      newDown = 0;
+    let newTop = body[0].down + 1;
+    if (newTop > areaHeight - 1) {
+      newTop = 0;
     }
-
-    newBody.unshift({ ...newBody[0], down: newDown });
-
-    setBody(newBody);
+    return { ...body[0], down: newTop };
   }
   function goUp() {
-    const newBody = [...body];
-    newBody.pop();
-    let newUp = newBody[0].down - 1;
-    if (newUp < areaHeight - areaHeight) {
-      newUp = areaHeight - 1;
+    let newTop = body[0].down - 1;
+    if (newTop < 0) {
+      newTop = areaHeight - 1;
     }
-
-    newBody.unshift({ ...newBody[0], down: newUp });
-    setBody(newBody);
+    return { ...body[0], down: newTop };
   }
   useInterval(
     () => {
+      const newBody = [...body];
+      newBody.pop();
+
+      let newHead = null;
       switch (direction) {
         case "right":
-          goRight();
+          newHead = goRight();
           break;
         case "down":
-          goDown();
+          newHead = goDown();
           break;
         case "up":
-          goUp();
+          newHead = goUp();
           break;
         case "left":
-          goLeft();
+          newHead = goLeft();
           break;
+        default:
+          newHead = goRight();
       }
+      newBody.unshift(newHead);
+      // if (body[0].down === apple.top && body[0].right === apple.left) {
+      //   generateApple();
+      //   setScore(score + 1);
 
-      if (body[0].down === apple.top && body[0].right === apple.left) {
+      //   setBody([...body, { down: body[1].down, right: body[1].right }]);
+      // }
+      if (newBody[0].down === apple.top && newBody[0].right === apple.left) {
         generateApple();
-        setScore(score + 1);
-
-        setBody([...body, { down: body[1].down, right: body[1].right }]);
+        const newBodyPartAfterFood = {
+          down: newBody[1].down,
+          right: newBody[1].right,
+        };
+        setBody([...newBody, newBodyPartAfterFood]);
+        setScore(score + 1)
+      } else {
+        setBody(newBody);
       }
       for (let index = 1; index < body.length; index++) {
         if (
