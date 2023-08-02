@@ -1,95 +1,42 @@
-import { Camera, CameraType } from "expo-camera";
-import { useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import * as MediaLibrary from "expo-media-library";
-import PicButton from "./component/takePicButton";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { createStackNavigator, NavigationContainer} from "@react-navigation/native"
+import { Entypo } from "@expo/vector-icons";
+import { CameraScreen } from "./components/CameraScreen";
+import { MediaScreen } from "./components/MediaScreen";
+
+const Stack = createStackNavigator();
+
 export default function App() {
-  const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
-  const [image, setImage] = useState();
-  const cameraRef = useRef(null);
-  if (!permission) {
-    // Camera permissions are still loading
-    return <View />;
-  }
-
-  if (!permission.granted) {
-    // Camera permissions are not granted yet
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="Permission"></Button>
-      </View>
-    );
-  }
-
-  function toggleCameraType() {
-    setType((current) =>
-      current === CameraType.back ? CameraType.front : CameraType.back
-    );
-  }
-  const takePic = async () => {
-    if (cameraRef) {
-      try {
-        const data = await cameraRef.current.takePictureAsync();
-        console.log(data);
-        setImage(data.uri);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-  const saveImage = async () => {
-    if (image) {
-      try {
-        MediaLibrary.requestPermissionsAsync()
-        await MediaLibrary.createAssetAsync(image);
-        alert("pic saved");
-        setImage(null);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
   return (
-    <View style={styles.cameraContainer}>
-      {!image ? (
-        <Camera ref={cameraRef} style={styles.camera} type={type}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-              <Text style={styles.text}>Flip Camera</Text>
-            </TouchableOpacity>
-          </View>
-        </Camera>
-      ) : (
-        <Image source={{ uri: image }} style={styles.camera} />
-      )}
-      <View>
-        {image ? (
-          <View>
-            <PicButton
-              title={"retake?"}
-              icon="retweet"
-              onPress={() => setImage(null)}
-            />
-            <PicButton title={"save?"} icon={"check"} onPress={saveImage} />
-          </View>
-        ) : (
-          <PicButton title={"take a pic ;)"} icon="camera" onPress={takePic} />
-        )}
-      </View>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Camera" component={CameraScreen} />
+        <Stack.Screen name="Media" component={MediaScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
+const HomeScreen = ({ navigation }) => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: "row",
+        gap: 32,
+        justifyContent: "space-around",
+        paddingVertical: 32,
+      }}
+    >
+      <TouchableOpacity onPress={() => navigation.navigate("Camera")}>
+        <Entypo name="camera" size={64} color="black" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Media")}>
+        <Entypo name="images" size={64} color="black" />
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
