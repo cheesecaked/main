@@ -14,12 +14,12 @@ import PicButton from "../component/takePicButton";
 import ImageItem from "./MediaScreen";
 
 
-export const CameraScreen = () => {
+export default function CameraScreen  () {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [image, setImage] = useState();
   const [selectedImages, setSelectedImages] = useState();
-  const cameraRef = useRef(null);
+  const cameraRef = useRef();
 
   // async function loadStoragePhotos () {
   //   let media = await  MediaLibrary.getAssetsAsync
@@ -50,7 +50,7 @@ export const CameraScreen = () => {
       try {
         const data = await cameraRef.current.takePictureAsync();
         console.log(data);
-        setImage(data.uri);
+        setImage(data.uri)
       } catch (e) {
         console.log(e);
       }
@@ -79,7 +79,7 @@ export const CameraScreen = () => {
           </View>
         </Camera>
       ) : (
-        <ImageItem photo={photo} />
+        <ImageItem image={image} />
       )}
       <View>
         {image ? (

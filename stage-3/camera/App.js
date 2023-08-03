@@ -2,7 +2,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Entypo } from "@expo/vector-icons";
-import { CameraScreen } from "./components/CameraScreen";
+import  CameraScreen  from "./components/CameraScreen";
 import { MediaScreen } from "./components/MediaScreen";
 
 const Stack = createNativeStackNavigator()
