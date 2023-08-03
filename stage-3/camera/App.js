@@ -1,10 +1,11 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { createStackNavigator, NavigationContainer} from "@react-navigation/native"
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Entypo } from "@expo/vector-icons";
 import { CameraScreen } from "./components/CameraScreen";
 import { MediaScreen } from "./components/MediaScreen";
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator()
 
 export default function App() {
   return (
@@ -17,7 +18,7 @@ export default function App() {
     </NavigationContainer>
   );
 }
-const HomeScreen = ({ navigation }) => {
+function HomeScreen ({ navigation }) {
   return (
     <View
       style={{

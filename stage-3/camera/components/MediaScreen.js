@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   Image,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -17,7 +18,7 @@ export const MediaScreen = () => {
     let media = await MediaLibrary.getAssetsAsync({
       mediaType: MediaLibrary.MediaType.photo,
       sortBy: ["creationTime"],
-      first: 25,
+      first: 10,
     });
     setImages(media.assets);
   }
@@ -67,3 +68,38 @@ export const MediaScreen = () => {
 export function ImageItem({ image }) {
   return <Image source={{ uri: image.uri }} />;
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "transparent",
+    margin: 64,
+  },
+  button: {
+    flex: 1,
+    alignSelf: "flex-end",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white",
+  },
+  cameraContainer: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#000",
+    paddingBottom: 20,
+  },
+});
