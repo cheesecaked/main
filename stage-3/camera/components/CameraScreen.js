@@ -14,7 +14,7 @@ import PicButton from "../component/takePicButton";
 import ImageItem from "./MediaScreen";
 
 
-export default function CameraScreen  () {
+export const CameraScreen = () => {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [image, setImage] = useState();
@@ -79,7 +79,7 @@ export default function CameraScreen  () {
           </View>
         </Camera>
       ) : (
-        <ImageItem image={image} />
+        <Image source={image.uri}/>
       )}
       <View>
         {image ? (
