@@ -24,27 +24,55 @@ export const MediaScreen = () => {
     let media = await MediaLibrary.getAssetsAsync({
       mediaType: MediaLibrary.MediaType.photo,
       sortBy: ["creationTime"],
-      first: 20,
+      first: 21,
     });
     setImages(media.assets);
   }
-
   async function loadMoreImages() {
     let media = await MediaLibrary.getAssetsAsync({
       after: images[images.length - 1].id,
       mediaType: MediaLibrary.MediaType.photo,
       sortBy: ["creationTime"],
-      first: 20,
+      first: 21,
     });
 
     setImages([...images, ...media.assets]);
+  }
+
+  async function handleUpload() {
+    const photo = selectedImages[0];
+
+    const info = await MediaLibrary.getAssetInfoAsync(photo);
+
+    console.log({ info });
+
+    const data = new FormData();
+
+    data.append("file", { uri: info.localUri, name: info.filename });
+    data.append("upload_preset", "cheesecake");
+    data.append("cloud_name", "dzsxbj2ug");
+
+    console.log(data);
+
+    fetch("https://api.cloudinary.com/v1_1/dzsxbj2ug/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.secure_url);
+      })
+      .catch((err) => {
+        alert("error while uploading");
+        console.log(err);
+      });
   }
   useEffect(() => {
     if (permissionResponse && permissionResponse.granted) {
       loadInitialPhotos();
     }
   }, [permissionResponse]);
-
+  console.log({ selectedImages });
   if (!permissionResponse) {
     return <View />;
   }
@@ -79,7 +107,7 @@ export const MediaScreen = () => {
   }
 
   return (
-    <View>
+    <View style={{ flex: 1, position: "relative" }}>
       <FlatList
         onEndReached={loadMoreImages}
         numColumns={3}
@@ -88,14 +116,18 @@ export const MediaScreen = () => {
           <ImageItem
             index={index}
             image={item}
-            onSelect={() => setSelectedImages([...selectedImages], item)}
+            onSelect={() => setSelectedImages([...selectedImages, item])}
             onRemove={() =>
               setSelectedImages(
-                selectedImages.filter((selected) => selected.id !== item.id)
+                selectedImages.filter((selected) => {
+                  selected !== item.id;
+                })
               )
             }
             selected={
-              selectedImages.findIndex((selected) => selected.id === item.id) + 1
+              selectedImages.findIndex((selected) => {
+                selected.id === item.id;
+              }) + 1
             }
           />
         )}
@@ -114,8 +146,9 @@ export const MediaScreen = () => {
             borderRadius: 20,
             alignItems: "center",
           }}
+          onPress={handleUpload}
         >
-          <Text style={{ color: "white" }}></Text>
+          <Text style={{ color: "white" }}>send</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -126,7 +159,11 @@ function ImageItem({ image, index, onSelect, onRemove, selected }) {
   const marginHorizontal = index % 3 === 1 ? imageGap : 0;
 
   return (
-    <TouchableOpacity onPress={() => (selected ? onRemove() : onSelect())}>
+    <TouchableOpacity
+      onPress={() => {
+        selected ? onRemove() : onSelect();
+      }}
+    >
       <View
         style={{
           width: imageWidth,
@@ -142,7 +179,7 @@ function ImageItem({ image, index, onSelect, onRemove, selected }) {
             height: imageWidth,
             backgroundColor: "#ccc",
           }}
-          source={image}
+          source={{ uri: image.uri }}
         />
         {!!selected && (
           <View
