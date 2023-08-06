@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import mime from "mime";
 import * as MediaLibrary from "expo-media-library";
 
 const windowWidth = Dimensions.get("window").width;
@@ -48,13 +49,19 @@ export const MediaScreen = () => {
 
     const data = new FormData();
 
-    data.append("file", { uri: info.localUri, name: info.filename });
-    data.append("upload_preset", "cheesecake");
-    data.append("cloud_name", "dzsxbj2ug");
+    data.append('file', {
+      uri: info.localUri,
+      name: info.filename,
+      type: mime.getType(info.localUri)
+    })
+    data.append("upload_preset", "cheesecake")
+    // data.append("file", { uri: info.localUri, name: info.filename });
+    // data.append("upload_preset", "cheesecake");
+    // data.append("cloud_name", "dzsxbj2ug");
 
     console.log(data);
 
-    fetch("https://api.cloudinary.com/v1_1/dzsxbj2ug/upload", {
+    fetch("https://api-ap.cloudinary.com/v1_1/dzsxbj2ug/uploadr", {
       method: "post",
       body: data,
     })
