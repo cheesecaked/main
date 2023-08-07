@@ -61,11 +61,10 @@ export const MediaScreen = () => {
 
     console.log(data);
 
-    fetch("https://api-ap.cloudinary.com/v1_1/dzsxbj2ug/uploadr", {
+    fetch("https://api-ap.cloudinary.com/v1_1/dzsxbj2ug/upload", {
       method: "post",
       body: data,
-    })
-      .then((res) => res.json())
+    }).then((res) => res.json())
       .then((data) => {
         console.log(data.secure_url);
       })
