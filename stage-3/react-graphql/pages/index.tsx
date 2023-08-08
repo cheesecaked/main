@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-
+import Link from "next/link";
+import { useState } from "react";
 const COUNTRY = gql`
   query Country($code: ID!) {
     country(code: $code) {
@@ -26,18 +27,19 @@ const COUNTRIES = gql`
     }
   }
 `;
+
 export default function Home() {
   const { loading, error, data } = useQuery(COUNTRIES);
 
-  if (loading) return (<p>loadingg</p>);
-  if (error) return (<p>Error: {error.message}</p>);
+  if (loading) return <p>loadingg</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   console.log({ data });
   return (
     <main>
       <ul>
         {data.countries.map((country: any) => (
-          <li>{country.name}</li>
+          <li><Link href={`${country.name}/${country.code}`}>{country.name}</Link></li>
         ))}
       </ul>
     </main>
