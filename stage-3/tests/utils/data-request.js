@@ -1,5 +1,5 @@
 export async function dataRequest(action, options) {
-    const result = await fetch(`https://ap-southeast-1.aws.data.mongodb-api.com/app/data-vldda/endpoint/data/v1/action/${action}`, {
+    const result = await fetch(`https://ap-southeast-1.aws.data.mongodb-api.com/app/data-vldda/endpoint/data/v1/${action}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

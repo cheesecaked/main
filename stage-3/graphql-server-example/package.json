@@ -13,7 +13,9 @@
   "type": "module",
   "dependencies": {
     "@apollo/server": "^4.9.1",
-    "graphql": "^16.7.1"
+    "graphql": "^16.7.1",
+    "lru-cache": "^10.0.0",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@types/node": "^20.4.8",

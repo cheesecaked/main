@@ -28,7 +28,6 @@ export default function countryInfo() {
 
   return (
     <div>
-      <h1>Continent: {name[1][1]}</h1>
       <h2>Capital: {data.country.capital}</h2>
       <h2>Code: {data.country.code}</h2>
       <h2>

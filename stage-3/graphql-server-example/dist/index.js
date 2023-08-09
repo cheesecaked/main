@@ -4,27 +4,43 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 // that together define the "shape" of queries that are executed against
 // your data.
 const typeDefs = `#graphql
-  type Book {
-    title: String
-    author: String
-  }
-  type Query {
-    books: [Book]
-  }
+type Post {
+    text: String
+    images: [String]
+    userId: String
+    createdAt: String
+}
+
+input PostInput {
+    text: String
+    images: [String]
+}
+
+type Query {
+    getPosts: [Post]
+    getPostDetail: Post
+}
+
+type Mutation {
+    createPost(postCreateInput: PostInput!): Post,
+    updatePost(id: ID!, postUpdateInput: PostInput!): Post,
+    deletePost(id: ID!): ID
+}
 `;
-const books = [
-    {
-        title: "The Awakening",
-        author: "Kate Chopin",
-    },
-    {
-        title: "City of Glass",
-        author: "Paul Auster",
-    },
-];
 const resolvers = {
     Query: {
-        books: () => books,
+        getPosts: () => {
+        },
+        getPostDetail: () => {
+        }
+    },
+    Mutation: {
+        createPost: () => {
+        },
+        updatePost: () => {
+        },
+        deletePost: () => {
+        },
     },
 };
 const server = new ApolloServer({

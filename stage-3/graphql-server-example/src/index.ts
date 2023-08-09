@@ -1,83 +1,58 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-
+import dataRequest from "../util/data-request.js";
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
 // your data.
 const typeDefs = `#graphql
-  type Country {
-    name: String
-    code: String
-    currency: String
-    phone: Int
-  }
+type Post {
+    text: String
+    images: [String]
+    userId: String
+    createdAt: String
+}
 
-  type Continent {
-    code: String
-    name: String
-  }
+input PostInput {
+    text: String
+    images: [String]
+}
 
-  type Query {
-    getOneContinent: Continent
-    Countries: [country]
-    country(code: String): Country
-  }
+type Query {
+    getPosts: [Post]
+    getPostDetail: Post
+}
+
+type Mutation {
+    createPost(postCreateInput: PostInput!): Post,
+    updatePost(id: ID!, postUpdateInput: PostInput!): Post,
+    deletePost(id: ID!): ID
+}
 `;
-const SampleCountries = [
-  {
-    code: 'BA',
-    phone: 387,
-    name: 'Bosnia and Herzegovina',
-    currency: 'BAM',
-  },
-  {
-   code: 'BB',
-   phone:  1246,
-   name: 'Barbados',
-   currency: 'BBD'
-  },
-  {
-    code: 'BD',
-    phone:  880,
-    name: 'Bangladesh',
-    currency: 'BDT'
-   },
-   {
-    code: 'BE',
-    phone:  32,
-    name: 'Belgium',
-    currency: 'EUR'
-   },
-   {
-    code: 'BF',
-    phone:  226,
-    name: 'Burkina Faso',
-    currency: 'XOF'
-   },
-];
 
 const resolvers = {
   Query: {
-    getOneContinent: () => {
-        return null;
+    getPosts: async () => {
+      const result = await dataRequest("find", {});
+      return result;
     },
-    countries: () => {
-        return SampleCountries
+    getPostDetail: () => {},
+  },
+  Mutation: {
+    createPost: async (_, args) => {
+      const result = await dataRequest("insertOne", {
+        postCreateInput: args,
+      });
+      return result
     },
-    country: (_, args) => {
-        console.log({args})
-        return SampleCountries.find((country) => country.code ===args.code)
-    }
+    updatePost: () => {},
+    deletePost: () => {},
   },
 };
-
 const server = new ApolloServer({
-    typeDefs,
-    resolvers
-})
-
+  typeDefs,
+  resolvers,
+});
 const { url } = await startStandaloneServer(server, {
   listen: { port: 4000 },
 });
-
 console.log(`🚀  Server ready at: ${url}`);
