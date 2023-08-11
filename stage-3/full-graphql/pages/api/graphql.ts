@@ -8,7 +8,7 @@ const typeDefs = `#graphql
 type Post {
     text: String
     images: [String]
-    userId: String
+    _id: String
     createdAt: String
 }
 
@@ -19,14 +19,13 @@ input PostInput {
 
 type Query {
     getPosts: [Post]
-    getPostDetail(id: ID!): Post
 }
 
 type Mutation {
     createPost(postCreateInput: PostInput): ID,
     updatePost(id: ID!, postUpdateInput: PostInput): Post,
     deletePost(id: ID!): ID,
-    helloMutation:String
+    getPostDetail(id: ID!): Post,
 }
 `;
 
@@ -36,18 +35,6 @@ const resolvers = {
       const { documents } = await dataRequest("find", {});
       console.log(documents);
       return documents;
-    },
-    getPostDetail: async (_: any, args: any) => {
-        const { id } = args.getPostDetailId
-      const { document } = await dataRequest("findOne", {
-        filter: {
-          _id: {
-            $oid: id
-          },
-        },
-      });
-      console.log(document);
-      return document;
     },
   },
   Mutation: {
@@ -63,11 +50,43 @@ const resolvers = {
       return result.insertedId;
     },
     updatePost: async (_: any, args: any) => {
-      const { text, images, id } = args.postUpdateInput;
-      const result = await dataRequest("", {});
+      const { text, images } = args.postUpdateInput;
+      const { document } = await dataRequest("updateOne", {
+        filter: {
+          _id: {
+            $oid: args.id,
+          },
+        },
+        update: {
+          text: text,
+          images: images,
+        },
+      });
+      console.log(document);
+      return document;
     },
-    deletePost: () => {},
-    helloMutation: () => "HI",
+    getPostDetail: async (_: any, args: any) => {
+      const { document } = await dataRequest("findOne", {
+        filter: {
+          _id: {
+            $oid: args.id,
+          },
+        },
+      });
+      console.log(document);
+      return document;
+    },
+    deletePost: async (_: any, args: any) => {
+      const { document } = await dataRequest("deleteOne", {
+        filter: {
+          _id: {
+            $oid: args.id,
+          },
+        },
+      });
+      console.log(document)
+      return document
+    },
   },
 };
 const server = new ApolloServer({
