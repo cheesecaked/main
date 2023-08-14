@@ -5,7 +5,7 @@ import { Entypo } from "@expo/vector-icons";
 export default function PicButton({ title, onPress, icon, color }) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Entypo name={icon} size={28} color={color ? color : "#f1f1f1"} />
+      <Entypo  name={icon} size={28} color={color ? color : "#f1f1f1"} />
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );

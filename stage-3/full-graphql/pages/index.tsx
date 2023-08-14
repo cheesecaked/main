@@ -11,26 +11,13 @@ const POSTS = gql`
 `;
 
 const CRUD_POST = gql`
-  mutation CrudPost(
-    $updatePostId: ID!
-    $postUpdateInput: PostInput
-    $deletePostId: ID!
-    $postCreateInput: PostInput
-  ) {
-    updatePost(id: $updatePostId, postUpdateInput: $postUpdateInput) {
-      text
-      images
-    }
-
-    deletePost(id: $deletePostId)
+  mutation CrudPost($postCreateInput: PostInput) {
     createPost(postCreateInput: $postCreateInput)
   }
 `;
 
 export default function Home() {
   const [createPost, { loading, error, data }] = useMutation(CRUD_POST);
-  const [updatePost] = useMutation(CRUD_POST);
-  const [deletePost] = useMutation(CRUD_POST);
   const {
     loading: loadingQuery,
     error: errorQuery,
@@ -38,19 +25,18 @@ export default function Home() {
   } = useQuery(POSTS);
   const [input, setInput] = useState("");
   const [switchType, setSwitchType] = useState(false);
-  console.log({ dataQuery });
   console.log({ loading, error, data });
+
   return (
     <>
       {dataQuery &&
-        dataQuery.getPosts.map((el: any, index: any) => {
+        dataQuery.getPosts.map((el: any) => {
           return (
             <TodoItem
               switchType={switchType}
               setSwitchType={setSwitchType}
               el={el}
-              key={index}
-              index={index}
+              key={el._id}
             />
           );
         })}
@@ -69,8 +55,6 @@ export default function Home() {
               },
             },
           });
-          setInput("");
-          // handleSubmit();
         }}
       >
         add post
@@ -88,7 +72,7 @@ const TodoItem = ({ switchType, setSwitchType, el }: any) => {
         alignItems: "center",
       }}
     >
-      {switchType ? <input></input> : <div>{el.text}</div>}
+      {switchType ? <input /> : <div>{el.text}</div>}
       <div>
         <button
           style={{
